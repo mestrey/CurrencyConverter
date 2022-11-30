@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\UserRepositoryContract;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -26,8 +25,11 @@ class AuthController extends BaseController
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
 
-        $user = $userRepository->create($input);
+        if ($userRepository->getFromEmail($input['email']) != null) {
+            return $this->sendError('User already exists with this email.', ['email' => $input['email']]);
+        }
 
+        $user = $userRepository->create($input);
         $success['token'] =  $user->createToken($user->getName())->plainTextToken;
         $success['name'] =  $user->getName();
 
