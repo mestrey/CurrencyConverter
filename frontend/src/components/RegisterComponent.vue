@@ -18,7 +18,6 @@
                         <Field name="password" type="password" class="form-control" />
                         <ErrorMessage name="password" class="error-feedback" />
                     </div>
-
                     <div class="form-group">
                         <button class="btn btn-primary btn-block" :disabled="loading">
                             <span v-show="loading" class="spinner-border spinner-border-sm"></span>
@@ -41,7 +40,7 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 
 export default {
-    name: 'RegisterView',
+    name: 'RegisterComponent',
     components: {
         Form,
         Field,
