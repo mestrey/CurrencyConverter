@@ -15,18 +15,17 @@ class AuthController extends BaseController
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'c_password' => 'required|same:password',
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->sendError('Validation Error.', $validator->errors(), 400);
         }
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
 
         if ($userRepository->getFromEmail($input['email']) != null) {
-            return $this->sendError('User already exists with this email.', ['email' => $input['email']]);
+            return $this->sendError('User already exists with this email.', ['email' => $input['email']], 400);
         }
 
         $user = $userRepository->create($input);
@@ -45,7 +44,7 @@ class AuthController extends BaseController
 
             return $this->sendResponse($success, 'User login successfully.');
         } else {
-            return $this->sendError('Unauthorised.');
+            return $this->sendError('Unauthorised.', [], 401);
         }
     }
 }
