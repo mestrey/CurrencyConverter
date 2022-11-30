@@ -4,11 +4,6 @@ namespace App\Http\Controllers;
 
 class BaseController extends Controller
 {
-    /**
-     * Return success response
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function sendResponse($result, $message)
     {
         $response = [
@@ -20,12 +15,6 @@ class BaseController extends Controller
         return response()->json($response, 200);
     }
 
-
-    /**
-     * Return error response
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function sendError($error, $errorMessages = [], $code = 404)
     {
         $response = [

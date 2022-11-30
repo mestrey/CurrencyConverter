@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\UserRepositoryContract;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,12 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends BaseController
 {
-    /**
-     * Register 
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function register(Request $request)
+    public function register(Request $request, UserRepositoryContract $userRepository)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -29,24 +25,21 @@ class AuthController extends BaseController
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->plainTextToken;
-        $success['name'] =  $user->name;
+
+        $user = $userRepository->create($input);
+
+        $success['token'] =  $user->createToken($user->getName())->plainTextToken;
+        $success['name'] =  $user->getName();
 
         return $this->sendResponse($success, 'User register successfully.');
     }
 
-    /**
-     * Login api
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function login(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $success['token'] =  $user->createToken('MyApp')->plainTextToken;
-            $success['name'] =  $user->name;
+            $success['token'] =  $user->createToken($user->getName())->plainTextToken;
+            $success['name'] =  $user->getName();
 
             return $this->sendResponse($success, 'User login successfully.');
         } else {
