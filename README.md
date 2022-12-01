@@ -17,11 +17,12 @@ Install the dependencies:
 composer install
 ```
 
-Configure your .env:
+Configure your .env and constants:
 
 ```bash
 cp .env.example .env
 nano .env
+nano frontend/src/utils/constants.js
 ```
 
 Execute the migrations:

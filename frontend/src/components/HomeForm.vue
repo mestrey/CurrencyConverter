@@ -4,20 +4,20 @@
             <div v-if="dataReady">
                 <div class="row">
                     <div class="col-sm-6 py-2">
-                        <select ref="symbolFrom" @change="onSelectChange()" class="form-select" size="5"
-                            v-model="symbolFrom">
+                        <select @change="onSelectChange()" class="form-select" size="5" v-model="symbolFrom"
+                            id="symbolFrom">
                             <option disabled value="">From?</option>
                             <option v-for="symbol in symbols" :key="symbol" :value="symbol.short">
-                                {{ symbol.short }} {{ symbol.long }}
+                                {{ symbol.long }}
                             </option>
                         </select>
                     </div>
                     <div class="col-sm-6 py-2">
-                        <select ref="symbolTo" @change="onSelectChange()" class="form-select" size="5"
-                            v-model="symbolTo">
+                        <select @change="onSelectChange()" class="form-select" size="5" v-model="symbolTo"
+                            id="symbolTo">
                             <option disabled value="">To?</option>
                             <option v-for="symbol in symbols" :key="symbol" :value="symbol.short">
-                                {{ symbol.short }} {{ symbol.long }}
+                                {{ symbol.long }}
                             </option>
                         </select>
                     </div>
@@ -67,6 +67,8 @@
 
 import UserService from './../services/user.service';
 
+import TomSelect from 'tom-select';
+
 export default {
     name: 'HomeComponent',
     data() {
@@ -80,16 +82,17 @@ export default {
             savedRates: {},
             currentRate: 0,
             loadingRate: false,
-            result: 0,
+            result: '...',
 
             error: '',
         };
     },
-    mounted() {
-        UserService.getCurrencySymbols().then(
+    async mounted() {
+        await UserService.getCurrencySymbols().then(
             (response) => {
                 this.error = '';
                 this.dataReady = true;
+
                 for (const symbol in response.data.symbols) {
                     this.symbols.push({
                         short: symbol,
@@ -101,30 +104,34 @@ export default {
                 this.error = error.response.data.message;
             }
         );
+
+        const settings = {
+            hideSelected: true,
+        };
+
+        new TomSelect('#symbolFrom', settings);
+        new TomSelect('#symbolTo', settings);
     },
     methods: {
         async onSelectChange() {
             this.error = '';
-            this.result = 0;
+            this.result = '...';
 
-            const symbolFrom = this.$refs.symbolFrom.value;
-            const symbolTo = this.$refs.symbolTo.value;
-
-            if (symbolFrom == symbolTo) {
+            if (this.symbolFrom == this.symbolTo) {
                 this.error = 'Choose different currency symbol!';
                 return;
             }
 
-            if (symbolFrom && symbolTo) {
+            if (this.symbolFrom && this.symbolTo) {
                 this.loadingRate = true;
-                let savedFrom = this.savedRates[symbolFrom]
+                let savedFrom = this.savedRates[this.symbolFrom]
 
                 if (!savedFrom) {
                     savedFrom = {};
                 }
 
-                if (!savedFrom[symbolTo]) {
-                    const response = await UserService.getCurrencyRate(symbolFrom, symbolTo);
+                if (!savedFrom[this.symbolTo]) {
+                    const response = await UserService.getCurrencyRate(this.symbolFrom, this.symbolTo);
 
                     if (response.status != 200) {
                         this.error = response.data.message;
@@ -133,21 +140,24 @@ export default {
                         return;
                     }
 
-                    savedFrom[symbolTo] = response.data.info.rate;
+                    savedFrom[this.symbolTo] = response.data.info.rate;
                 }
 
-                this.savedRates[symbolFrom] = savedFrom;
-                this.currentRate = savedFrom[symbolTo];
+                this.savedRates[this.symbolFrom] = savedFrom;
+                this.currentRate = savedFrom[this.symbolTo];
                 this.loadingRate = false;
             }
         },
         onInputChange(event) {
+            this.result = '...';
             const value = event.target.value;
 
             if (!isNaN(value) && value > 0 && this.currentRate != 0) {
                 this.result = Math.round((value * this.currentRate) * 1000) / 1000;
+            } else {
+                this.result = '...';
             }
-        }
+        },
     }
 }
 
