@@ -37,7 +37,8 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-6 py-2">
-                            <input @input="onInputChange($event)" class="form-control" type="number" min="0">
+                            <input v-model="inputData" @input="onInputChange($event)" class="form-control" type="number"
+                                min="0">
                         </div>
                         <div class="col-sm-6 py-2 text-center">
                             <p>{{ result }}</p>
@@ -82,6 +83,8 @@ export default {
             savedRates: {},
             currentRate: 0,
             loadingRate: false,
+
+            inputData: '',
             result: '...',
 
             error: '',
@@ -146,14 +149,14 @@ export default {
                 this.savedRates[this.symbolFrom] = savedFrom;
                 this.currentRate = savedFrom[this.symbolTo];
                 this.loadingRate = false;
+                this.onInputChange();
             }
         },
-        onInputChange(event) {
+        onInputChange() {
             this.result = '...';
-            const value = event.target.value;
 
-            if (!isNaN(value) && value > 0 && this.currentRate != 0) {
-                this.result = Math.round((value * this.currentRate) * 1000) / 1000;
+            if (!isNaN(this.inputData) && this.inputData > 0 && this.currentRate != 0) {
+                this.result = Math.round((this.inputData * this.currentRate) * 1000) / 1000;
             } else {
                 this.result = '...';
             }

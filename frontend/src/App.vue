@@ -1,6 +1,6 @@
 <template>
     <div class="container h-100 d-flex align-items-center justify-content-center">
-        <div class="row">
+        <div class="row" style="max-width: 50rem;">
             <div class="text-center py-4">
                 <h1>Currency Converter</h1>
             </div>

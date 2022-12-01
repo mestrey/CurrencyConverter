@@ -21,6 +21,9 @@
                     <div v-show="loading" class="loading mr-4"></div>
                     <span v-show="!loading">Sign Up</span>
                 </button>
+                <div class="pt-4">
+                    <a class="list-group-item" href="/login">Login instead</a>
+                </div>
             </div>
         </div>
     </Form>
