@@ -1,24 +1,24 @@
 <template>
     <Form @submit="handleLogin" :validation-schema="schema">
-        <div class="form-group">
+        <div class="form-group pb-4">
             <label for="email">Email</label>
             <Field name="email" type="email" class="form-control" />
-            <ErrorMessage name="email" class="error-feedback" />
+            <ErrorMessage name="email" class="error-feedback text-danger" />
         </div>
-        <div class="form-group">
+        <div class="form-group pb-4">
             <label for="password">Password</label>
             <Field name="password" type="password" class="form-control" />
-            <ErrorMessage name="password" class="error-feedback" />
+            <ErrorMessage name="password" class="error-feedback text-danger" />
         </div>
 
-        <div class="form-group">
-            <button class="btn btn-primary btn-block" :disabled="loading">
-                <span v-show="loading" class="spinner-border spinner-border-sm"></span>
-                <span>Login</span>
+        <div class="form-group text-center">
+            <button class="btn btn-dark btn-block" :disabled="loading">
+                <div v-show="loading" class="loading mr-4"></div>
+                <span v-show="!loading">Login</span>
             </button>
         </div>
 
-        <div class="form-group">
+        <div class="form-group my-4">
             <div v-if="message" class="alert alert-danger" role="alert">
                 {{ message }}
             </div>
@@ -60,7 +60,7 @@ export default {
             return this.$store.state.auth.status.loggedIn;
         },
     },
-    created() {
+    mounted() {
         if (this.loggedIn) {
             this.$router.push('/');
         }
@@ -75,12 +75,7 @@ export default {
                 },
                 (error) => {
                     this.loading = false;
-                    this.message =
-                        (error.response &&
-                            error.response.data &&
-                            error.response.data.message) ||
-                        error.message ||
-                        error.toString();
+                    this.message = error.response.data.message;
                 }
             );
         },

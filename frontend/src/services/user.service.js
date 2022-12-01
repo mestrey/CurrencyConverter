@@ -3,21 +3,13 @@ import authHeader from './auth-header';
 import { API_URL } from '../utils/constants';
 
 class UserService {
-    getPublicContent() {
-        return axios.get(API_URL + 'all');
+    getCurrencySymbols() {
+        return axios.get(API_URL + 'symbols', { headers: authHeader() });
     }
 
-    getUserBoard() {
-        return axios.get(API_URL + 'user', { headers: authHeader() });
+    getCurrencyRate(from, to) {
+        return axios.get(API_URL + `convert/${from}/${to}`, { headers: authHeader() });
     }
-
-    // getModeratorBoard() {
-    //     return axios.get(API_URL + 'mod', { headers: authHeader() });
-    // }
-
-    // getAdminBoard() {
-    //     return axios.get(API_URL + 'admin', { headers: authHeader() });
-    // }
 }
 
 export default new UserService();

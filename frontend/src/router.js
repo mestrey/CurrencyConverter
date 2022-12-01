@@ -3,25 +3,25 @@ import { AUTH_SAVE_KEY } from './utils/constants';
 
 import store from './store';
 
-import HomeComponent from './components/HomeComponent.vue';
-import LoginComponent from './components/LoginComponent.vue';
-import RegisterComponent from './components/RegisterComponent.vue';
+import HomeForm from './components/HomeForm.vue';
+import LoginForm from './components/LoginForm.vue';
+import RegisterForm from './components/RegisterForm.vue';
 
 const routes = [
     {
         path: '/',
         name: 'home',
-        component: HomeComponent,
+        component: HomeForm,
     },
     {
         path: '/login',
         name: 'login',
-        component: LoginComponent,
+        component: LoginForm,
     },
     {
         path: '/register',
         name: 'register',
-        component: RegisterComponent,
+        component: RegisterForm,
     },
     {
         path: '/logout',

@@ -7,4 +7,6 @@ interface CurrencyServiceContract
     public function __construct(string $baseUrl);
 
     public function convert(string $from, string $to);
+
+    public function getSymbols();
 }

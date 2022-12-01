@@ -10,8 +10,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
 });
 
-Route::middleware('auth:sanctum')
-    ->get('/convert/{from}/{to}', [CurrencyController::class, 'convert']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/convert/{from}/{to}', [CurrencyController::class, 'convert']);
+    Route::get('/symbols', [CurrencyController::class, 'symbols']);
+});
 
 Route::fallback(function () {
     return (new BaseController)->sendError('Route not found.');

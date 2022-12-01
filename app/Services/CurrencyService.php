@@ -21,4 +21,11 @@ class CurrencyService implements CurrencyServiceContract
             ])
             ->json();
     }
+
+    public function getSymbols()
+    {
+        return Http::acceptJson()
+            ->get($this->baseUrl . '/symbols')
+            ->json();
+    }
 }
